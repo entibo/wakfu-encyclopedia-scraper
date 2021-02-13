@@ -6,10 +6,10 @@ This tool extracts basic information about all the items listed in the encyclope
 ```
 {
   "{id}": {
-    "gfxId": "{}",
-    "level": "{0-215}",
-    "rarity": "{0-7, default=1}",
-    "type": {default=-1}"
+    "gfxId": {gfxId},
+    "level": {0-215},
+    "rarity": {0-7, default=1},
+    "type": {default=-1}
   }
 }
 ```

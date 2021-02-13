@@ -21,7 +21,13 @@ async function storeData(data: ScrapeData) {
     if (!savedItems) {
       let items = list.reduce(
         (obj, { gfxId, level, id, rarity, type }) => (
-          (obj[id!] = { gfxId, level, rarity, type }), obj
+          (obj[id!] = {
+            gfxId: parseInt(gfxId!),
+            level: parseInt(level),
+            rarity: parseInt(rarity),
+            type: parseInt(type),
+          }),
+          obj
         ),
         {} as Record<string, any>,
       )
