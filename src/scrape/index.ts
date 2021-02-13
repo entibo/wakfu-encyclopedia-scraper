@@ -1,5 +1,5 @@
 import * as puppeteer from "puppeteer"
-import { urlParts } from "./util"
+import { Locale, urlParts } from "./util"
 
 function extractItems() {
   function extractDataFromRow(row: HTMLElement) {
@@ -50,6 +50,7 @@ async function isLastPage(page: puppeteer.Page): Promise<boolean> {
 }
 
 async function navigateThroughPages(page: puppeteer.Page, baseUrl: string) {
+  console.log("Scanning folder:", baseUrl.split("com")[1])
   let items = [] as ReturnType<typeof extractItems>
   for (let pageNum = 1; ; pageNum++) {
     console.log("Loading page " + pageNum)
@@ -63,20 +64,28 @@ async function navigateThroughPages(page: puppeteer.Page, baseUrl: string) {
 }
 
 export default async function () {
+  console.log("Launching browser!")
   const browser = await puppeteer.launch({
     executablePath: "chrome.exe",
     headless: false,
   })
   const page = await browser.newPage()
-  for (let locale of ["fr" /*,"en","pt","es"*/]) {
-    const { baseUrl, folders } = urlParts[locale as keyof typeof urlParts]
+  let data = {} as Record<
+    Locale,
+    puppeteer.UnwrapPromiseLike<ReturnType<typeof navigateThroughPages>>
+  >
+  let locales = ["fr", "en", "pt", "es"] as readonly Locale[]
+  for (let locale of locales) {
+    const { baseUrl, folders } = urlParts[locale]
+    data[locale] = []
     for (let folder of folders) {
-      if (folder !== "armes") continue
+      //if(folder !== "montures") continue
       let url = baseUrl + folder
       let result = await navigateThroughPages(page, url)
-      console.log("result:", result)
+      data[locale] = data[locale].concat(result)
     }
   }
   console.log("Closing browser!")
   await browser.close()
+  return data
 }

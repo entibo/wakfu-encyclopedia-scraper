@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "clean": "rm -rf tmp json assets",
+    "clean": "rm -rf tmp json",
     "start": "ts-node src/index.ts"
   },
   "repository": {
@@ -12,7 +12,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/entibo/wakfu-encyclopedia-scraper/issues"
   },

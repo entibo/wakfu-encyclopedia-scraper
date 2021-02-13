@@ -1,3 +1,4 @@
+export type Locale = keyof typeof urlParts
 export const urlParts = {
   fr: {
     baseUrl: "https://wakfu.com/fr/mmorpg/encyclopedie/",
