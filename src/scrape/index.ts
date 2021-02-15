@@ -1,6 +1,16 @@
 import * as puppeteer from "puppeteer"
 import { Locale, urlParts } from "./util"
 
+export type ItemData = {
+  id: string | undefined;
+  gfxId: string | undefined;
+  rarity: string;
+  title: string;
+  type: string;
+  typeTitle: string;
+  level: string;
+}
+
 function extractItems() {
   function extractDataFromRow(row: HTMLElement) {
     let id = row
@@ -25,14 +35,16 @@ function extractItems() {
         .querySelector<HTMLImageElement>(".item-type img")
         ?.src.match(/\/category\/(\d+)\.png$/)?.[1] ?? "-1"
 
+    let typeTitle =
+      row.querySelector<HTMLImageElement>(".item-type img")?.title ?? ""
+
     let level =
       row
         .querySelector<HTMLElement>(".item-level")
         ?.innerText.match(/(\d+)/)?.[1] ?? "0"
 
-    return { id, gfxId, rarity, title, type, level }
+    return { id, gfxId, rarity, title, type, typeTitle, level }
   }
-
   let rows = document.querySelectorAll("tbody tr") ?? []
   return [...rows].map(extractDataFromRow)
 }
@@ -79,7 +91,7 @@ export default async function () {
     const { baseUrl, folders } = urlParts[locale]
     data[locale] = []
     for (let folder of folders) {
-      //if(folder !== "montures") continue
+      //if (folder !== "montures") continue
       let url = baseUrl + folder
       let result = await navigateThroughPages(page, url)
       data[locale] = data[locale].concat(result)
